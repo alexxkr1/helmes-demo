@@ -8,7 +8,6 @@ import lombok.Data;
 @Entity
 public class Sector {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -17,5 +16,6 @@ public class Sector {
     @Column(nullable = false)
     private int level;
 
-    private String parent_id;
+    @Column(name = "parent_id")
+    private Long parentId;
 }
