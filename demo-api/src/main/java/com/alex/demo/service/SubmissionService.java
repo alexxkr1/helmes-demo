@@ -3,6 +3,7 @@ package com.alex.demo.service;
 import com.alex.demo.dto.SubmissionDTO;
 import com.alex.demo.entity.Sector;
 import com.alex.demo.entity.Submission;
+import com.alex.demo.exception.ResourceNotFoundException;
 import com.alex.demo.repository.SectorRepository;
 import com.alex.demo.repository.SubmissionRepository;
 import org.springframework.stereotype.Service;
@@ -21,16 +22,23 @@ public class SubmissionService {
     }
 
     public Submission save(SubmissionDTO dto) {
-        Submission s = new Submission();
+        Submission s;
 
         if (dto.getId() != null){
-            s = repo.findById(dto.getId()).orElse(new Submission());
+            s = repo.findById(dto.getId()).orElseThrow(() -> new ResourceNotFoundException("Submission", dto.getId()));
+        } else {
+            s = new Submission();
         }
 
         s.setName(dto.getName());
         s.setAgreedToTerms(dto.getAgreedToTerms());
 
         List<Sector> selectedSectors = sectorRepo.findAllById(dto.getSectors());
+
+        if (selectedSectors.size() != dto.getSectors().size()) {
+            throw new ResourceNotFoundException("One or more Sector IDs are not valid");
+        }
+
         s.setSectors(selectedSectors);
 
         return repo.save(s);
