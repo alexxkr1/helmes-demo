@@ -1,12 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { SectorService } from '../../core/services/sector.service';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { Sector } from '../../core/models/sector.model';
 import { FormService } from '../../core/services/form.service';
 import { Submission } from '../../core/models/submission.model';
@@ -22,6 +18,8 @@ export class FormComponent {
   private sectorService = inject(SectorService);
   private formService = inject(FormService);
 
+  isLoading = signal(false);
+
   form = this.formBuilder.group({
     name: ['', Validators.required],
     sectors: [[] as number[], Validators.required],
@@ -31,18 +29,28 @@ export class FormComponent {
   sectors$!: Observable<Sector[]>;
 
   ngOnInit() {
-    sessionStorage.getItem('formId')
+    sessionStorage.getItem('formId');
     this.sectors$ = this.sectorService.getAllSectors();
 
     if (!sessionStorage.getItem('formId')) return;
-    this.formService.getSubmissionById(Number(sessionStorage.getItem('formId'))).subscribe({ next: (res) => {
-        this.form.patchValue({
+
+    this.isLoading.set(true);
+
+    this.formService
+      .getSubmissionById(Number(sessionStorage.getItem('formId')))
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.form.patchValue({
             name: res.name,
             sectors: res.sectors,
-            agreedToTerms: res.agreedToTerms
-        })
-    }})
-
+            agreedToTerms: res.agreedToTerms,
+          });
+        },
+        error: (err) => {
+          console.error('Error fetching submission', err);
+        },
+      });
   }
 
   getIndent(level: number): string {
@@ -50,31 +58,32 @@ export class FormComponent {
   }
 
   onSubmit() {
-    console.log(this.form.invalid)
     if (this.form.invalid) return;
-    try {
-        const formObject: Submission = {
-            name: this.form.value.name!,
-            sectors: this.form.value.sectors!,
-            agreedToTerms: this.form.value.agreedToTerms!
-        }
+    const formObject: Submission = {
+      name: this.form.value.name!,
+      sectors: this.form.value.sectors!,
+      agreedToTerms: this.form.value.agreedToTerms!,
+    };
 
-        const formId = Number(sessionStorage.getItem('formId'));
-        if (formId) {
-            formObject.id = formId;
-        }
-
-        const submission = this.formService.createOrUpdateSubmission(formObject)
-
-        submission.subscribe({ next: (res) => {
-            if (!formObject.id && res.id != null) {
-                sessionStorage.setItem('formId', res.id.toString());
-            }
-        }});
-
-    } catch (error) {
-        console.error('Error submitting form', error);
+    const formId = Number(sessionStorage.getItem('formId'));
+    if (formId) {
+      formObject.id = formId;
     }
-    console.warn(this.form.value);
+
+    this.isLoading.set(true);
+
+    this.formService
+      .createOrUpdateSubmission(formObject)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (res) => {
+          if (!formObject.id && res.id != null) {
+            sessionStorage.setItem('formId', res.id.toString());
+          }
+        },
+        error: (err) => {
+          console.error('Error submitting form', err);
+        },
+      });
   }
 }
