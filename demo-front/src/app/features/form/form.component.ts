@@ -46,9 +46,6 @@ export class FormComponent {
             agreedToTerms: res.agreedToTerms,
           });
         },
-        error: (err) => {
-          console.error('Error fetching submission', err);
-        },
       });
   }
 
@@ -82,10 +79,7 @@ export class FormComponent {
           if (!formObject.id && res.id != null) {
             sessionStorage.setItem('formId', res.id.toString());
           }
-        },
-        error: (err) => {
-          console.error('Error submitting form', err);
-        },
+        }
       });
   }
 }
