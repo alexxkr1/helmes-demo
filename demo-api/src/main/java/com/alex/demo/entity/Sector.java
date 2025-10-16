@@ -1,5 +1,6 @@
 package com.alex.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,5 +18,6 @@ public class Sector {
     private int level;
 
     @Column(name = "parent_id")
+    @JsonProperty("parent_id")
     private Long parentId;
 }
