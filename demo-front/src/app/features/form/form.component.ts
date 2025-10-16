@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { SectorService } from '../../core/services/sector.service';
-import { finalize, Observable } from 'rxjs';
+import { finalize, Observable, take } from 'rxjs';
 import { Sector } from '../../core/models/sector.model';
 import { FormService } from '../../core/services/form.service';
 import { Submission } from '../../core/models/submission.model';
@@ -29,7 +29,6 @@ export class FormComponent {
   sectors$!: Observable<Sector[]>;
 
   ngOnInit() {
-    sessionStorage.getItem('formId');
     this.sectors$ = this.sectorService.getAllSectors();
 
     if (!sessionStorage.getItem('formId')) return;
@@ -38,7 +37,7 @@ export class FormComponent {
 
     this.formService
       .getSubmissionById(Number(sessionStorage.getItem('formId')))
-      .pipe(finalize(() => this.isLoading.set(false)))
+      .pipe(take(1), finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (res) => {
           this.form.patchValue({
@@ -74,7 +73,10 @@ export class FormComponent {
 
     this.formService
       .createOrUpdateSubmission(formObject)
-      .pipe(finalize(() => this.isLoading.set(false)))
+      .pipe(
+        take(1),
+        finalize(() => this.isLoading.set(false))
+      )
       .subscribe({
         next: (res) => {
           if (!formObject.id && res.id != null) {
