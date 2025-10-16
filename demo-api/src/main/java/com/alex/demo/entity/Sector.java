@@ -20,4 +20,9 @@ public class Sector {
     @Column(name = "parent_id")
     @JsonProperty("parent_id")
     private Long parentId;
+
+    public Sector(Long id, String label) {
+        this.id = id;
+        this.label = label;
+    }
 }

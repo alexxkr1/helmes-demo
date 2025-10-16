@@ -2,12 +2,14 @@ package com.alex.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Table(name = "submission")
 @Entity
+@NoArgsConstructor
 public class Submission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +29,10 @@ public class Submission {
     @Column(nullable = false, name = "agreed_to_terms")
     private Boolean agreedToTerms;
 
+    public Submission(Long id, String name, List<Sector> sectors, Boolean agreedToTerms ) {
+        this.id = id;
+        this.name = name;
+        this.sectors = sectors;
+        this.agreedToTerms = agreedToTerms;
+    }
 }
