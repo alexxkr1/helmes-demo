@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { SectorService } from '../../core/services/sector.service';
+import { SectorService } from '@/core/services/sector.service';
 import { finalize, Observable, take } from 'rxjs';
-import { Sector } from '../../core/models/sector.model';
-import { FormService } from '../../core/services/form.service';
-import { Submission } from '../../core/models/submission.model';
+import { Sector } from '@/core/models/sector.model';
+import { FormService } from '@/core/services/form.service';
+import { Submission } from '@/core/models/submission.model';
 @Component({
   selector: 'app-form',
   standalone: true,
