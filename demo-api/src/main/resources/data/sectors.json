@@ -25,7 +25,7 @@
   },
   {
     "id": 342,
-    "label": "Bakery &amp; confectionery products",
+    "label": "Bakery & confectionery products",
     "level": 2,
     "parent_id": 6
   },
@@ -37,19 +37,19 @@
   },
   {
     "id": 42,
-    "label": "Fish &amp; fish products",
+    "label": "Fish & fish products",
     "level": 2,
     "parent_id": 6
   },
   {
     "id": 40,
-    "label": "Meat &amp; meat products",
+    "label": "Meat & meat products",
     "level": 2,
     "parent_id": 6
   },
   {
     "id": 39,
-    "label": "Milk &amp; dairy products",
+    "label": "Milk & dairy products",
     "level": 2,
     "parent_id": 6
   },
@@ -61,7 +61,7 @@
   },
   {
     "id": 378,
-    "label": "Sweets &amp; snack food",
+    "label": "Sweets & snack food",
     "level": 2,
     "parent_id": 6
   },
