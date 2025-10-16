@@ -1,7 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { environment } from "@/../environments/environment";
 import { Submission } from "@/core/models/submission.model";
 
 @Injectable({
@@ -9,7 +8,7 @@ import { Submission } from "@/core/models/submission.model";
 })
 export class FormService { 
     private httpService = inject(HttpClient);
-    private readonly submissionsEndpoint = `${environment.apiUrl}/submissions`;
+    private readonly submissionsEndpoint = `${import.meta.env.NG_APP_API_URL}/submissions`;
 
     constructor() { }
 

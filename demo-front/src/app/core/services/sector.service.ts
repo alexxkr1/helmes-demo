@@ -2,14 +2,12 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { Sector } from "@/core/models/sector.model";
-import { environment } from "@/../environments/environment";
-
 @Injectable({
     providedIn: 'root'
 })
 export class SectorService { 
     private httpService = inject(HttpClient);
-    private readonly sectorsEndpoint = `${environment.apiUrl}/sectors`;
+    private readonly sectorsEndpoint = `${import.meta.env.NG_APP_API_URL}/sectors`;
 
     constructor() { }
 
