@@ -3,10 +3,12 @@ package com.alex.demo.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Table(name = "sector")
 @Entity
+@NoArgsConstructor
 public class Sector {
     @Id
     private Long id;
