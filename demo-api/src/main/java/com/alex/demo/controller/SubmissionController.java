@@ -5,13 +5,16 @@ import com.alex.demo.entity.Submission;
 import com.alex.demo.service.SubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
 @RestController
 @RequestMapping("/api/submissions")
+@Validated
 public class SubmissionController {
     private final SubmissionService service;
 
@@ -22,9 +25,10 @@ public class SubmissionController {
     public ResponseEntity<Submission> createOrUpdate(@Valid @RequestBody SubmissionDTO dto) {
         Submission saved = service.save(dto);
 
-        return ResponseEntity.created(URI.create("/api/submissions" + saved.getId())).body(saved);
+        return new ResponseEntity<>(saved,HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Get submission by id")
     @GetMapping("/{id}")
     public ResponseEntity<SubmissionDTO> getSubmission(@PathVariable Long id) {
         return service.findById(id)
