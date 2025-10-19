@@ -15,6 +15,28 @@ To prevent this, the project POM contains empty overrides for these elements.
 If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
 
 
+### Database
+
+# Database Schema (SQLite)
+
+1. It is only needed if you want to reset the database to the initial state.
+2. The dump file is located at `src/main/resources/data/database_schema.sql`.
+3. You can use any SQLite client to import the Schema file and reset the database.
+
+
+# Database Dump (SQLite)
+
+1. It is only needed if you want to get database current state data.
+2. The dump file is located at `src/main/resources/data/database_dump.sql`.
+3. You can use any SQLite client to import the dump file and reset the database.
+
+# Database Seeder 
+
+1. Database seeder is implemented in the `DatabaseSeeder` class located at `src/main/java/com/alex/demo/config/DatabaseSeeder.java`.
+2. It will load `sectors.json` and populate the database with initial sectors.
+3. If there is any existing data in sectors table, seeding will not happen.
+
+
 # IntelliJ Setup
 
 1. Open the project in **IntelliJ IDEA**.

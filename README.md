@@ -13,3 +13,8 @@ This project is a full-stack web application designed to handle user submissions
 1. ./demo-api/README.md
 2. ./demo-front/README.md
 
+# **Database**
+
+1. Database ERD image is located at `./demo-api/database-erd.drawio.png`.
+2. Database Dump is at `./demo-api/src/main/resources/data/database_dump.sql`
+3. Database Schema is at `./demo-api/src/main/resources/data/database_schema.sql`
