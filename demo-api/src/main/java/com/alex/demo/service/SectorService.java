@@ -1,22 +1,29 @@
 package com.alex.demo.service;
 
+import com.alex.demo.dto.SectorDTO;
 import com.alex.demo.entity.Sector;
+import com.alex.demo.mappers.SectorMapper;
 import com.alex.demo.repository.SectorRepository;
-import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
 public class SectorService {
     private final SectorRepository repo;
+    private final SectorMapper sectorMapper;
 
-    public SectorService(SectorRepository repo) {
+    public SectorService(
+            SectorRepository repo,
+            SectorMapper sectorMapper
+    ) {
         this.repo = repo;
+        this.sectorMapper = sectorMapper;
     }
 
-    public List<Sector> findAll() {
+
+    @Transactional(readOnly = true)
+    public List<SectorDTO> findAll() {
         List<Sector> allSectors = repo.findAll();
         Map<Long, List<Sector>> childrenMap = new HashMap<>();
         List<Sector> roots = new ArrayList<>();
@@ -34,7 +41,7 @@ public class SectorService {
             addWithChildren(root, childrenMap, result);
         }
 
-        return result;
+        return sectorMapper.toDtoList(result);
     }
 
     private void addWithChildren(Sector parent, Map<Long, List<Sector>> childrenMap, List<Sector> result) {
@@ -42,9 +49,12 @@ public class SectorService {
         List<Sector> children = childrenMap.get(parent.getId());
         if (children != null) {
             children.sort(Comparator.comparing(Sector::getId));
+
             for (Sector child : children) {
                 addWithChildren(child, childrenMap, result);
             }
         }
     }
+
 }
+

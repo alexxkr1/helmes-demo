@@ -1,6 +1,8 @@
 package com.alex.demo.controller;
 
 import com.alex.demo.dto.SubmissionDTO;
+import com.alex.demo.dto.SubmissionResponseDTO;
+import com.alex.demo.dto.UpsertSubmissionRequestDTO;
 import com.alex.demo.entity.Submission;
 import com.alex.demo.service.SubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,15 +24,15 @@ public class SubmissionController {
 
     @Operation(summary = "Create new Submission or Update if id is present")
     @PostMapping
-    public ResponseEntity<Submission> createOrUpdate(@Valid @RequestBody SubmissionDTO dto) {
-        Submission saved = service.save(dto);
+    public ResponseEntity<SubmissionResponseDTO> createOrUpdate(@Valid @RequestBody UpsertSubmissionRequestDTO dto) {
+        SubmissionResponseDTO saved = service.upsert(dto);
 
         return new ResponseEntity<>(saved,HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get submission by id")
     @GetMapping("/{id}")
-    public ResponseEntity<SubmissionDTO> getSubmission(@PathVariable Long id) {
+    public ResponseEntity<SubmissionResponseDTO> getSubmission(@PathVariable Long id) {
         return service.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

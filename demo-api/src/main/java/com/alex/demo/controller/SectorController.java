@@ -1,5 +1,6 @@
 package com.alex.demo.controller;
 
+import com.alex.demo.dto.SectorDTO;
 import com.alex.demo.entity.Sector;
 import com.alex.demo.service.SectorService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,8 +24,8 @@ public class SectorController {
 
     @Operation(summary = "Get all sectors")
     @GetMapping
-    public ResponseEntity<List<Sector>> getAll() {
-        List<Sector> sectors = service.findAll();
+    public ResponseEntity<List<SectorDTO>> getAll() {
+        List<SectorDTO> sectors = service.findAll();
 
         return ResponseEntity.ok(sectors); 
     }

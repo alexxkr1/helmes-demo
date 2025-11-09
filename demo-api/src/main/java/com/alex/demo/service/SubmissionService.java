@@ -1,12 +1,16 @@
 package com.alex.demo.service;
 
 import com.alex.demo.dto.SubmissionDTO;
+import com.alex.demo.dto.SubmissionResponseDTO;
+import com.alex.demo.dto.UpsertSubmissionRequestDTO;
 import com.alex.demo.entity.Sector;
 import com.alex.demo.entity.Submission;
 import com.alex.demo.exception.ResourceNotFoundException;
+import com.alex.demo.mappers.SubmissionMapper;
 import com.alex.demo.repository.SectorRepository;
 import com.alex.demo.repository.SubmissionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,41 +19,44 @@ import java.util.Optional;
 public class SubmissionService {
     private final SubmissionRepository repo;
     private final SectorRepository sectorRepo;
+    private final SubmissionMapper submissionMapper;
 
-    public SubmissionService(SubmissionRepository repo, SectorRepository sectorRepo) {
+    public SubmissionService(
+            SubmissionRepository repo,
+            SectorRepository sectorRepo,
+            SubmissionMapper submissionMapper
+            ) {
         this.repo = repo;
         this.sectorRepo = sectorRepo;
+        this.submissionMapper = submissionMapper;
     }
 
-    public Submission save(SubmissionDTO dto) {
+    @Transactional
+    public SubmissionResponseDTO upsert(UpsertSubmissionRequestDTO dto) {
         Submission s;
 
-        if (dto.getId() != null){
-            s = repo.findById(dto.getId()).orElseThrow(() -> new ResourceNotFoundException("Submission", dto.getId()));
+        if (dto.id() != null){
+            s = repo.findById(dto.id()).orElseThrow(() -> new ResourceNotFoundException("Submission", dto.id()));
+
+            submissionMapper.updateFromDto(s, dto);
         } else {
-            s = new Submission();
+            s = submissionMapper.toEntity(dto);
         }
 
-        s.setName(dto.getName());
-        s.setAgreedToTerms(dto.getAgreedToTerms());
+        List<Sector> selectedSectors = sectorRepo.findAllById(dto.sectors());
 
-        List<Sector> selectedSectors = sectorRepo.findAllById(dto.getSectors());
-
-        if (selectedSectors.size() != dto.getSectors().size()) {
+        if (selectedSectors.size() != dto.sectors().size()) {
             throw new ResourceNotFoundException("One or more Sector IDs are not valid");
         }
 
         s.setSectors(selectedSectors);
+        Submission saved = repo.save(s);
+        return submissionMapper.toResponseDto(saved);
 
-        return repo.save(s);
     }
 
-    public Optional<SubmissionDTO> findById(Long id) {
-        return repo.findById(id).map(s -> new SubmissionDTO(
-                s.getId(),
-                s.getName(),
-                s.getSectors().stream().map(Sector::getId).toList(),
-                s.getAgreedToTerms()
-        ));
+    @Transactional(readOnly = true)
+    public Optional<SubmissionResponseDTO> findById(Long id) {
+        return repo.findById(id).map(submissionMapper::toResponseDto);
     }
 }
