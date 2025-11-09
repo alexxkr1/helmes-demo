@@ -13,6 +13,9 @@ This project is a full-stack web application designed to handle user submissions
 1. ./demo-api/README.md
 2. ./demo-front/README.md
 
+## **API Swagger docs**
+1. http://localhost:6060/swagger-ui/index.html
+
 # **Database**
 
 1. Database ERD image is located at `./demo-api/database-erd.drawio.png`.
