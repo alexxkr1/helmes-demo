@@ -1,6 +1,7 @@
 package com.alex.demo;
 
-import com.alex.demo.dto.SubmissionDTO;
+import com.alex.demo.dto.SubmissionResponseDTO;
+import com.alex.demo.dto.UpsertSubmissionRequestDTO;
 import com.alex.demo.entity.Sector;
 import com.alex.demo.entity.Submission;
 import com.alex.demo.exception.ResourceNotFoundException;
@@ -33,7 +34,7 @@ public class SubmissionServiceUnitTest {
     @InjectMocks
     private SubmissionService submissionService;
 
-    private SubmissionDTO submissionDTO;
+    private UpsertSubmissionRequestDTO submissionDTO;
     private Sector mockSector;
     private Sector mockSector2;
     private List<Long> sectorIds;
@@ -45,7 +46,7 @@ public class SubmissionServiceUnitTest {
 
         sectorIds = Arrays.asList(1L, 2L);
 
-        submissionDTO = new SubmissionDTO(
+        submissionDTO = new UpsertSubmissionRequestDTO(
                 null,
                 "Test Name",
                 sectorIds,
@@ -61,9 +62,9 @@ public class SubmissionServiceUnitTest {
 
         Submission expectedSavedSubmission = new Submission(
                 5L,
-                submissionDTO.getName(),
+                submissionDTO.name(),
                 expectedSectorList,
-                submissionDTO.getAgreedToTerms()
+                submissionDTO.agreedToTerms()
                 );
 
         when(sectorRepository.findAllById(sectorIds))
@@ -73,12 +74,12 @@ public class SubmissionServiceUnitTest {
         when(submissionRepository.save(any(Submission.class)))
                 .thenReturn(expectedSavedSubmission);
 
-        Submission result = submissionService.save(submissionDTO);
+        SubmissionResponseDTO result = submissionService.upsert(submissionDTO);
 
-        assertNotNull(result.getId(), "Returned submission must have ID");
-        assertEquals(5L, result.getId());
-        assertEquals("Test Name", result.getName());
-        assertTrue(result.getAgreedToTerms());
+        assertNotNull(result.id(), "Returned submission must have ID");
+        assertEquals(5L, result.id());
+        assertEquals("Test Name", result.name());
+        assertTrue(result.agreedToTerms());
 
         verify(submissionRepository, never()).findById(anyLong());
         verify(submissionRepository, times(1)).save(any(Submission.class));
@@ -87,12 +88,12 @@ public class SubmissionServiceUnitTest {
     @Test
     void saveOrUpdate_shouldThrowNotFoundException_whenUpdatingNonExistentId() {
         Long nonExistentId = 321321L;
-        SubmissionDTO submissionDTO = new SubmissionDTO(nonExistentId, "Name", sectorIds, true);
+        UpsertSubmissionRequestDTO submissionDTO = new UpsertSubmissionRequestDTO(nonExistentId, "Name", sectorIds, true);
 
         when(submissionRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
-            submissionService.save(submissionDTO);
+            submissionService.upsert(submissionDTO);
         });
 
         verify(submissionRepository, never()).save(any(Submission.class));

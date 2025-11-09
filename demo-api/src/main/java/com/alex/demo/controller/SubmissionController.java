@@ -1,13 +1,10 @@
 package com.alex.demo.controller;
 
-import com.alex.demo.dto.SubmissionDTO;
 import com.alex.demo.dto.SubmissionResponseDTO;
 import com.alex.demo.dto.UpsertSubmissionRequestDTO;
-import com.alex.demo.entity.Submission;
 import com.alex.demo.service.SubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

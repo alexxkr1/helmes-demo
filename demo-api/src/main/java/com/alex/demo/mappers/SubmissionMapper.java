@@ -1,6 +1,5 @@
 package com.alex.demo.mappers;
 
-import com.alex.demo.dto.SubmissionDTO;
 import com.alex.demo.dto.SubmissionResponseDTO;
 import com.alex.demo.dto.UpsertSubmissionRequestDTO;
 import com.alex.demo.entity.Submission;

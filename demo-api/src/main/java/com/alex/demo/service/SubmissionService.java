@@ -1,6 +1,5 @@
 package com.alex.demo.service;
 
-import com.alex.demo.dto.SubmissionDTO;
 import com.alex.demo.dto.SubmissionResponseDTO;
 import com.alex.demo.dto.UpsertSubmissionRequestDTO;
 import com.alex.demo.entity.Sector;
