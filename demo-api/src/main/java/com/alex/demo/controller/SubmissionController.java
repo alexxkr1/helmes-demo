@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
@@ -27,15 +28,25 @@ public class SubmissionController {
     public ResponseEntity<SubmissionResponseDTO> createOrUpdate(@Valid @RequestBody UpsertSubmissionRequestDTO dto) {
         SubmissionResponseDTO saved = service.upsert(dto);
 
-        return new ResponseEntity<>(saved,HttpStatus.CREATED);
+        if(dto.id() != null) {
+            return ResponseEntity.ok(saved);
+        } else {
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(saved.id())
+                    .toUri();
+
+            return ResponseEntity.created(location).body(saved);
+        }
     }
 
     @Operation(summary = "Get submission by id")
     @GetMapping("/{id}")
     public ResponseEntity<SubmissionResponseDTO> getSubmission(@PathVariable Long id) {
-        return service.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        SubmissionResponseDTO dto = service.findById(id);
+
+        return ResponseEntity.ok(dto);
     }
 
 }

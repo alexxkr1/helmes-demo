@@ -56,7 +56,10 @@ public class SubmissionService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<SubmissionResponseDTO> findById(Long id) {
-        return repo.findById(id).map(submissionMapper::toResponseDto);
+    public SubmissionResponseDTO findById(Long id) {
+        Submission submission = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Submission with ID " + id + " not found"));
+
+        return submissionMapper.toResponseDto(submission);
     }
 }
