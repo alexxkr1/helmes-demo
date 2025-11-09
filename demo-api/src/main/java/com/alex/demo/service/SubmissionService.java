@@ -8,27 +8,18 @@ import com.alex.demo.exception.ResourceNotFoundException;
 import com.alex.demo.mappers.SubmissionMapper;
 import com.alex.demo.repository.SectorRepository;
 import com.alex.demo.repository.SubmissionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class SubmissionService {
     private final SubmissionRepository repo;
     private final SectorRepository sectorRepo;
     private final SubmissionMapper submissionMapper;
-
-    public SubmissionService(
-            SubmissionRepository repo,
-            SectorRepository sectorRepo,
-            SubmissionMapper submissionMapper
-            ) {
-        this.repo = repo;
-        this.sectorRepo = sectorRepo;
-        this.submissionMapper = submissionMapper;
-    }
 
     @Transactional
     public SubmissionResponseDTO upsert(UpsertSubmissionRequestDTO dto) {

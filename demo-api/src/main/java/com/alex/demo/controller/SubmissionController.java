@@ -5,6 +5,7 @@ import com.alex.demo.dto.UpsertSubmissionRequestDTO;
 import com.alex.demo.service.SubmissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,11 +15,11 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/submissions")
+@RequiredArgsConstructor
 @Validated
 public class SubmissionController {
     private final SubmissionService service;
 
-    public SubmissionController(SubmissionService service) { this.service = service; }
 
     @Operation(summary = "Create new Submission or Update if id is present")
     @PostMapping

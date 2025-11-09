@@ -13,8 +13,8 @@ public interface SubmissionMapper {
     @Mapping(target = "sectors", source = "sectors")
     SubmissionResponseDTO toResponseDto(Submission dto);
 
-    @Mapping(target = "id", ignore = true) // Don't map the ID
-    @Mapping(target = "sectors", ignore = true) // Handled manually
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "sectors", ignore = true)
     void updateFromDto(@MappingTarget Submission submission, UpsertSubmissionRequestDTO dto);
 
     @Mapping(target = "sectors", ignore = true)

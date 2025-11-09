@@ -4,23 +4,16 @@ import com.alex.demo.dto.SectorDTO;
 import com.alex.demo.entity.Sector;
 import com.alex.demo.mappers.SectorMapper;
 import com.alex.demo.repository.SectorRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class SectorService {
     private final SectorRepository repo;
     private final SectorMapper sectorMapper;
-
-    public SectorService(
-            SectorRepository repo,
-            SectorMapper sectorMapper
-    ) {
-        this.repo = repo;
-        this.sectorMapper = sectorMapper;
-    }
-
 
     @Transactional(readOnly = true)
     public List<SectorDTO> findAll() {
